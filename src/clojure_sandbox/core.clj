@@ -2,6 +2,18 @@
 
 ; Working through the conurrency section in Clojure Programming by Emerick.
 
+; Useful testing macro for concurrency work:
+(defmacro futures
+  [n & exprs]
+  (vec (for [_ (range n)
+             expr exprs]
+         `(future ~expr))))
+
+(defmacro wait-futures
+  [& args]
+  `(doseq [f# (futures ~@args)]
+     @f#))
+
 ; Adding a watch to an atom - atom uses an anonymous function
 (defn watch-func
   [key id old new]
@@ -29,4 +41,28 @@
 ; Answer: Well, it appears that dissoc would get tested, then (:age @atom) is called and or'ed. The or will
 ; fail, making the exception get thrown.
 (swap! sarah dissoc :age)
+
+; Work on Refs - for coordinated, synchronous access to state
+; Example used is a super basic fantasy game.
+(defn character
+     [name & {:as opts}]
+     (ref (merge {:name name :items #{} :health 500}
+                 opts)))
+; this function generates characters with opts, which is another map
+; The characters!
+(def smaug (character "Smaug" :health 500 :strength 400 :items (set (range 50))))
+(def bilbo (character "Bilbo" :health 100 :strength 100))
+(def gandalf (character "Gandalf" :health 75 :mana 750))
+; loot a character!
+(defn loot
+  [from to]
+  (dosync ; needed to set up a transaction
+    (when-let [item (first (:items @from))]
+      (alter to update-in [:items] conj item)
+      (alter from update-in [:items] disj item))))
+
+; have the characters loot Smaug!
+(wait-futures 1
+                 (while (loot smaug bilbo))
+                 (while (loot smaug gandalf)))
 
