@@ -54,15 +54,18 @@
 (def bilbo (character "Bilbo" :health 100 :strength 100))
 (def gandalf (character "Gandalf" :health 75 :mana 750))
 ; loot a character!
-(defn loot
+(defn fixedloot
   [from to]
   (dosync ; needed to set up a transaction
     (when-let [item (first (:items @from))]
-      (alter to update-in [:items] conj item)
+      (commute to update-in [:items] conj item) ; replaced alter with commute
       (alter from update-in [:items] disj item))))
 
+; commute does not cause a conflict with the ref - but it must be used carefully!
+; alter ensures that the in-transaction and committed ref values are the SAME.
+
 ; have the characters loot Smaug!
-(wait-futures 1
-                 (while (loot smaug bilbo))
-                 (while (loot smaug gandalf)))
+(time (wait-futures 1
+                 (while (fixedloot smaug bilbo))
+                 (while (fixedloot smaug gandalf))))
 
