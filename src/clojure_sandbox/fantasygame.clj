@@ -1,5 +1,9 @@
 (ns clojure-sandbox.fantasygame)
 
+; note - I needed to first reference the "root" package clojure-sandbox before mapping it
+; to the name "cutil"
+(require '(clojure-sandbox [concurrency-util :as cutil]))
+
 ; Work on Refs - for coordinated, synchronous access to state
 ; Example used is a super basic fantasy game.
 (defn character
@@ -23,7 +27,7 @@
 ; alter ensures that the in-transaction and committed ref values are the SAME.
 
 ; have the characters loot Smaug!
-(time (wait-futures 1
+(time (cutil/wait-futures 1
                  (while (fixedloot smaug bilbo))
                  (while (fixedloot smaug gandalf))))
 

@@ -1,4 +1,6 @@
-(ns clojure-sandbox.core)
+(ns clojure-sandbox.basic)
+
+(require '(clojure-sandbox [concurrency-util :as cutil]))
 
 ; Working through the conurrency section in Clojure Programming by Emerick.
 
