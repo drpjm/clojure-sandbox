@@ -28,3 +28,9 @@
         (doto (Thread. #(println "in other thread: " (valid-value? 257)))
           .start
           .join))
+
+; this is cool: when passing a new binding to a thread, the scope is maintained
+(binding [*maxvalue* 500]
+  (println (valid-value? 200))
+  @(future (valid-value? 200)))
+
