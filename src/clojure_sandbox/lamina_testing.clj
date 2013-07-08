@@ -1,6 +1,6 @@
 (ns clojure-sandbox.lamina-testing)
 
-(use 'lamina.executor 'lamina.core)
+(use 'lamina.executor 'lamina.core 'lamina.viz)
 ;(import 'java.util.concurrent.ScheduledThreadPoolExecutor 'java.util.concurrent.TimeUnit 'java.util.concurrent.Executors)
 
 ; build a scheduled thread pool
