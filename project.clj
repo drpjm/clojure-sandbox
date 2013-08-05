@@ -7,4 +7,5 @@
                  [org.clojure/algo.monads "0.1.4"]
                  [org.clojure/math.numeric-tower "0.0.2"]
                  [core.async "0.1.0-SNAPSHOT"]
-                 [lamina "0.5.0-rc4"]])
+                 [lamina "0.5.0-rc4"]
+                 [uncomplicate/fluokitten "0.3.0"]])
